@@ -9,7 +9,8 @@ import java.util.List;
 @Entity
 @Table(name = "APP_GARDEN")
 @NamedQueries({
-        @NamedQuery(name = "Garden.findByName", query = "SELECT g FROM Garden g WHERE g.name = :name AND g.user = :user")
+        @NamedQuery(name = "Garden.findByName", query = "SELECT g FROM Garden g WHERE g.name = :name AND g.user = :user"),
+        @NamedQuery(name = "Garden.findBySlug", query = "SELECT g FROM Garden g WHERE g.slug = :slug AND g.user = :user"),
 })
 public class Garden extends AbstractEntity {
 

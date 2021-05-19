@@ -19,4 +19,13 @@ public class GardenDao extends BaseDao<Garden> {
             return null;
         }
     }
+
+    public Garden findBySlug(String slug, User user) {
+        try {
+            return em.createNamedQuery("Garden.findBySlug", Garden.class).setParameter("slug", slug).setParameter("user", user)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
 }

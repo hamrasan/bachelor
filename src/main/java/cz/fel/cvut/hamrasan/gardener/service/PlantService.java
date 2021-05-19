@@ -83,13 +83,13 @@ public class PlantService {
     }
 
     @Transactional
-    public void create(LocalDate date, float minTemperature, float maxTemperature, String season, Long plantId, String gardenName) throws NotAllowedException {
+    public void create(LocalDate date, float minTemperature, float maxTemperature, String season, Long plantId, String gardenSlug) throws NotAllowedException {
         Objects.requireNonNull(plantId);
         Objects.requireNonNull(date);
-        Objects.requireNonNull(gardenName);
+        Objects.requireNonNull(gardenSlug);
         User user = userDao.find(SecurityUtils.getCurrentUser().getId());
 
-        Garden garden = gardenDao.findByName(gardenName,user );
+        Garden garden = gardenDao.findBySlug(gardenSlug, user);
         if(!user.getGardens().contains(garden)) throw new NotAllowedException("Not allowed operation");
 
         UserPlant userPlant = new UserPlant(date, minTemperature, maxTemperature, season, plantDao.find(plantId), garden );
