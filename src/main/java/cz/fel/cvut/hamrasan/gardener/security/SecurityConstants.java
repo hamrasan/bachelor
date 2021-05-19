@@ -22,7 +22,7 @@ public class SecurityConstants {
 
     public static final String COOKIE_URI = "/";
 
-    public static final String ORIGIN_URI = "http://localhost:3000";
+    public static final String ORIGIN_URI = "https://hamrasan-bp-frontend.herokuapp.com";
 
     /**
      * Session timeout in seconds.
