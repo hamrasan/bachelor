@@ -1,6 +1,7 @@
 package cz.fel.cvut.hamrasan.gardener.rest;
 
 import cz.fel.cvut.hamrasan.gardener.dto.GardenDto;
+import cz.fel.cvut.hamrasan.gardener.exceptions.AlreadyExistsException;
 import cz.fel.cvut.hamrasan.gardener.security.SecurityConstants;
 import cz.fel.cvut.hamrasan.gardener.security.SecurityUtils;
 import cz.fel.cvut.hamrasan.gardener.service.GardenService;
@@ -34,7 +35,7 @@ public class GardenController {
     }
 
     @PostMapping(consumes= MediaType.APPLICATION_JSON_VALUE )
-    public void create(@RequestBody HashMap<String, String> hashMap) {
+    public void create(@RequestBody HashMap<String, String> hashMap) throws AlreadyExistsException {
 
         if(!SecurityUtils.isAuthenticatedAnonymously()) {
             gardenService.create(hashMap.get("name"), hashMap.get("location"));

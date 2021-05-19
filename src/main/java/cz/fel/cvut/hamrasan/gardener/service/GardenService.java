@@ -3,6 +3,8 @@ package cz.fel.cvut.hamrasan.gardener.service;
 import cz.fel.cvut.hamrasan.gardener.dao.GardenDao;
 import cz.fel.cvut.hamrasan.gardener.dao.UserDao;
 import cz.fel.cvut.hamrasan.gardener.dto.GardenDto;
+import cz.fel.cvut.hamrasan.gardener.exceptions.AlreadyExistsException;
+import cz.fel.cvut.hamrasan.gardener.exceptions.NotAllowedException;
 import cz.fel.cvut.hamrasan.gardener.model.Garden;
 import cz.fel.cvut.hamrasan.gardener.model.User;
 import cz.fel.cvut.hamrasan.gardener.security.SecurityUtils;
@@ -53,9 +55,10 @@ public class GardenService {
      * @param location - location of new garden
      */
     @Transactional
-    public void create(String name, String location) {
+    public void create(String name, String location) throws AlreadyExistsException {
         User user = SecurityUtils.getCurrentUser();
         if(user != null) {
+            if(gardenDao.findByName(name, user) != null) throw new AlreadyExistsException();
             Garden garden = new Garden(name, location, user);
             gardenDao.persist(garden);
         }
