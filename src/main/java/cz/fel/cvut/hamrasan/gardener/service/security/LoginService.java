@@ -12,12 +12,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.logging.Logger;
+
 @Service
 public class LoginService {
 
     private DefaultAuthenticationProvider provider;
     private UserDao userDao;
     private TranslateService translateService;
+    private final static Logger LOGGER = Logger.getLogger(LoginService.class.getName());
+
 
     @Autowired
     public LoginService(DefaultAuthenticationProvider provider, UserDao userDao, TranslateService translateService) {
@@ -29,8 +33,10 @@ public class LoginService {
 
     @Transactional(readOnly = true)
     public UserDto login(/*String username*/ String email, String password) throws AlreadyLoginException {
-
-        if (SecurityUtils.getCurrentUserDetails() != null) throw new AlreadyLoginException();
+        if (SecurityUtils.getCurrentUserDetails() != null) {
+            LOGGER.info("Already login exception as " + SecurityUtils.getCurrentUserDetails().getUsername() );
+            throw new AlreadyLoginException();
+        }
         Authentication auth = new UsernamePasswordAuthenticationToken(/*username*/ email, password);
         provider.authenticate(auth);
         return translateService.translateUser(userDao.find(SecurityUtils.getCurrentUser().getId()));
