@@ -107,8 +107,12 @@ public class ScheduleService {
         if(!user.getValves().contains(valve)) throw new NotAllowedException("Not allowed operation");
         ValveSchedule valveSchedule = new ValveSchedule(Integer.parseInt(arrOfStr[0]), Integer.parseInt(arrOfStr[1]), valvingLength, valve, days);
 
+        valveScheduleDao.persist(valveSchedule);
+        LOGGER.info("Valving schedule for user with id: " + user.getId() + " and valve name " + valve.getName() +" is set");
+
         final Runnable valving = new Runnable() {
             public void run() {
+                if(valveScheduleDao.find(valveSchedule.getId()) != null) {
                     try {
                         valveService.moveValve(valve.getName(), "true");
                         valveService.setStopValving(valve.getName(), valveSchedule.getLength());
@@ -119,6 +123,7 @@ public class ScheduleService {
                         LOGGER.warning("The problem with valving of valve name "+ valve.getName());
                         e.printStackTrace();
                     }
+                }
             }
         };
 
@@ -135,8 +140,6 @@ public class ScheduleService {
             }
         }
 
-        valveScheduleDao.persist(valveSchedule);
-        LOGGER.info("Valving schedule for user with id: " + user.getId() + " and valve name " + valve.getName() +" is set");
     }
 
 
