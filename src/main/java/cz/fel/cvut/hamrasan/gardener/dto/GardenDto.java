@@ -15,6 +15,11 @@ public class GardenDto {
     @NotNull(message = "Name cannot be blank")
     private String name;
 
+    @Basic(optional = false)
+    @Size(max = 100, min = 1, message = "Slug is in incorrect format.")
+    @NotNull(message = "Slug cannot be blank")
+    private String slug;
+
     private String location;
 
     private List<TemperatureDto> temperatureDtos;
@@ -26,17 +31,31 @@ public class GardenDto {
 
 
     public GardenDto(@NotNull(message = "Id cannot be blank") Long id, @Size(max = 100, min = 1, message = "Name is in incorrect format.") @NotNull(message = "Name cannot be blank") String name,
+                     @Size(max = 100, min = 1, message = "Slug is in incorrect format.") @NotNull(message = "Slug cannot be blank") String slug,
                      String location, List<TemperatureDto> temperatureDtos,
                      List<HumidityDto> humidityDtos, List<PressureDto> pressureDtos, Long user, List<PlantDto> plantDtos) {
 
         this.id = id;
         this.name = name;
+        this.slug = slug;
         this.location = location;
         this.temperatureDtos = temperatureDtos;
         this.humidityDtos = humidityDtos;
         this.pressureDtos = pressureDtos;
         this.user = user;
         this.plantDtos = plantDtos;
+    }
+
+
+    public String getSlug() {
+
+        return slug;
+    }
+
+
+    public void setSlug(String slug) {
+
+        this.slug = slug;
     }
 
 

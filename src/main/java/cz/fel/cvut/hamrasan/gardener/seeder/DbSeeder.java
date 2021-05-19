@@ -174,7 +174,7 @@ public class DbSeeder implements
         List<UserPlant> userPlants = new ArrayList<UserPlant>();
 
         if (users.size()>0){
-            Garden garden = new Garden("Záhrada za domom","Praha",users.get(0),userPlants);
+            Garden garden = new Garden("Záhrada za domom","Zahradazadomom","Praha",users.get(0),userPlants);
             gardenDao.persist(garden);
         }
     }

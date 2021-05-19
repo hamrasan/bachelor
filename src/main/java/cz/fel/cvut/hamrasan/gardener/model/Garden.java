@@ -21,6 +21,12 @@ public class Garden extends AbstractEntity {
 
     private String location;
 
+    @Basic(optional = false)
+    @Column(nullable = false, length = 100)
+    @Size(max = 100, min = 1, message = "Slug is in incorrect format.")
+    @NotBlank(message = "Slug cannot be blank")
+    private String slug;
+
     @OneToMany(mappedBy = "garden")
     private List<Pressure> pressures;
 
@@ -48,20 +54,22 @@ public class Garden extends AbstractEntity {
 
 
     public Garden(@Size(max = 100, min = 1, message = "Name is in incorrect format.") @NotBlank(message = "Name cannot be blank") String name,
-                  String location, List<Pressure> pressures, List<Temperature> temperatures, List<Humidity> humidities,
-                  User user, List<UserPlant> plants, List<Valve> valves, List<Soil> soils, List<Rain> rain) {
+                  String location, @Size(max = 100, min = 1, message = "Slug is in incorrect format.") @NotBlank(message = "Slug cannot be blank") String slug, List<Pressure> pressures,
+                  List<Temperature> temperatures, List<Humidity> humidities, List<Soil> soils, List<Rain> rains, User user, List<UserPlant> plants, List<Valve> valves) {
 
         this.name = name;
         this.location = location;
+        this.slug = slug;
         this.pressures = pressures;
         this.temperatures = temperatures;
         this.humidities = humidities;
+        this.soils = soils;
+        this.rains = rains;
         this.user = user;
         this.plants = plants;
         this.valves = valves;
-        this.soils = soils;
-        this.rains = rain;
     }
+
 
     public Garden() {
         this.humidities = new ArrayList<>();
@@ -74,9 +82,10 @@ public class Garden extends AbstractEntity {
     }
 
 
-    public Garden(@Size(max = 100, min = 1, message = "Name is in incorrect format.") @NotBlank(message = "Name cannot be blank") String name, String location, User user, List<UserPlant> plants) {
+    public Garden(@Size(max = 100, min = 1, message = "Name is in incorrect format.") @NotBlank(message = "Name cannot be blank") String name, @Size(max = 100, min = 1, message = "Slug is in incorrect format.") @NotBlank(message = "Slug cannot be blank") String slug, String location, User user, List<UserPlant> plants) {
 
         this.name = name;
+        this.slug = slug;
         this.user = user;
         this.location = location;
         this.plants = plants;
@@ -89,9 +98,10 @@ public class Garden extends AbstractEntity {
     }
 
 
-    public Garden(@Size(max = 100, min = 1, message = "Name is in incorrect format.") @NotBlank(message = "Name cannot be blank") String name, String location, User user) {
+    public Garden(@Size(max = 100, min = 1, message = "Name is in incorrect format.") @NotBlank(message = "Name cannot be blank") String name, @Size(max = 100, min = 1, message = "Slug is in incorrect format.") @NotBlank(message = "Slug cannot be blank") String slug, String location, User user) {
 
         this.name = name;
+        this.slug = slug;
         this.location = location;
         this.user = user;
         this.plants = new ArrayList<>();
@@ -113,6 +123,18 @@ public class Garden extends AbstractEntity {
     public void setName(String name) {
 
         this.name = name;
+    }
+
+
+    public String getSlug() {
+
+        return slug;
+    }
+
+
+    public void setSlug(String slug) {
+
+        this.slug = slug;
     }
 
 

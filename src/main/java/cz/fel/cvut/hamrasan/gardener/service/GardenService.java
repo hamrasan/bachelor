@@ -59,8 +59,41 @@ public class GardenService {
         User user = SecurityUtils.getCurrentUser();
         if(user != null) {
             if(gardenDao.findByName(name, user) != null) throw new AlreadyExistsException();
-            Garden garden = new Garden(name, location, user);
+            String slug = translateToSlug(name);
+            Garden garden = new Garden(name, slug, location, user);
             gardenDao.persist(garden);
         }
+    }
+
+    private String translateToSlug(String str){
+        String slug = str.replaceAll("\\s","");
+        slug = slug.replace('á','a');
+        slug = slug.replace('é','e');
+        slug = slug.replace('í','i');
+        slug = slug.replace('ý','y');
+        slug = slug.replace('ž','z');
+        slug = slug.replace('š','s');
+        slug = slug.replace('ť','t');
+        slug = slug.replace('ľ','l');
+        slug = slug.replace('ú','u');
+        slug = slug.replace('ô','o');
+        slug = slug.replace('č','c');
+        slug = slug.replace('ř','r');
+        slug = slug.replace('ě','e');
+        slug = slug.replace('ň','n');
+        slug = slug.replace('ó','o');
+        slug = slug.replace('ä','a');
+        slug = slug.replace('ĺ','l');
+        slug = slug.replace('ŕ','r');
+        slug = slug.replace('ů','u');
+        slug = slug.replace('Ú','U');
+        slug = slug.replace('Š','S');
+        slug = slug.replace('Č','C');
+        slug = slug.replace('Ť','T');
+        slug = slug.replace('Ř','R');
+        slug = slug.replace('Ž','Z');
+        slug = slug.replace('Ň','N');
+        slug = slug.replace('Ľ','L');
+        return slug;
     }
 }

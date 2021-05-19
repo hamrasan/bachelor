@@ -92,7 +92,7 @@ public class TranslateService {
             plants.forEach(plant -> plantDtos.add(translateUserPlant(plant)));
         }
 
-        return new GardenDto(garden.getId(), garden.getName(), garden.getLocation(), temperatureDtos, humidityDtos, pressureDtos,
+        return new GardenDto(garden.getId(), garden.getName(), garden.getSlug(), garden.getLocation(), temperatureDtos, humidityDtos, pressureDtos,
                 garden.getUser().getId(), plantDtos);
     }
 
