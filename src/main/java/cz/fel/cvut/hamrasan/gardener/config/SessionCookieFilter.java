@@ -17,7 +17,7 @@ import java.util.List;
 public class SessionCookieFilter extends GenericFilterBean {
 
     private final String SESSION_COOKIE_NAME = "JSESSIONID";
-    private final String SAME_SITE_ATTRIBUTE_VALUES = ";HttpOnly;Secure;SameSite=None";
+    private final String SAME_SITE_ATTRIBUTE_VALUES = "SameSite=None;Secure";
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
