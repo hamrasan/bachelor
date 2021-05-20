@@ -68,6 +68,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
                 .and().headers().frameOptions().sameOrigin()
                 .and().authenticationProvider(authenticationProvider)
+                .addFilterAfter(new SameSiteFilter(), BasicAuthenticationFilter.class)
+
 //                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 //                .and()
                 .csrf().disable()
@@ -77,7 +79,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter(SecurityConstants.USERNAME_PARAM).passwordParameter(SecurityConstants.PASSWORD_PARAM)
                 .and()
 //                .addFilterAfter(new SessionCookieFilter(), BasicAuthenticationFilter.class)
-                .addFilterAfter(new SameSiteFilter(), BasicAuthenticationFilter.class)
                 .addFilter(corsFilter()).logout().invalidateHttpSession(true).deleteCookies(COOKIES_TO_DESTROY)
                 .logoutUrl(SecurityConstants.LOGOUT_URI).logoutSuccessHandler(logoutSuccessHandler)
                 .and().sessionManagement().maximumSessions(1);
