@@ -47,6 +47,10 @@ public class AuthenticationSuccess implements AuthenticationSuccessHandler, Logo
         }
         final LoginStatus loginStatus = new LoginStatus(true, authentication.isAuthenticated(), username, null);
 
+        if(httpServletResponse.containsHeader(HttpHeaders.SET_COOKIE)) {
+            httpServletResponse.setHeader(HttpHeaders.SET_COOKIE, httpServletResponse.getHeader(HttpHeaders.SET_COOKIE) + SAME_SITE_ATTRIBUTE_VALUES);
+        }
+        else{
         Cookie[] cookies = httpServletRequest.getCookies();
         if (cookies != null && cookies.length > 0) {
             List<Cookie> cookieList = Arrays.asList(cookies);
@@ -55,8 +59,11 @@ public class AuthenticationSuccess implements AuthenticationSuccessHandler, Logo
                 httpServletResponse.setHeader(HttpHeaders.SET_COOKIE, sessionCookie.getName() + "=" + sessionCookie.getValue() + SAME_SITE_ATTRIBUTE_VALUES);
             }
         }
+        }
 
         mapper.writeValue(httpServletResponse.getOutputStream(), loginStatus);
+
+
     }
 
     private String getUsername(Authentication authentication) {
