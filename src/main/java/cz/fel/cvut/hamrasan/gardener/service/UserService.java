@@ -4,7 +4,6 @@ import cz.fel.cvut.hamrasan.gardener.dao.UserDao;
 import cz.fel.cvut.hamrasan.gardener.dto.UserDto;
 import cz.fel.cvut.hamrasan.gardener.exceptions.BadPassword;
 import cz.fel.cvut.hamrasan.gardener.exceptions.NotAllowedException;
-import cz.fel.cvut.hamrasan.gardener.exceptions.NotFoundException;
 import cz.fel.cvut.hamrasan.gardener.exceptions.UnauthorizedException;
 import cz.fel.cvut.hamrasan.gardener.model.Gender;
 import cz.fel.cvut.hamrasan.gardener.model.User;
@@ -16,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 @Service
 public class UserService {
@@ -23,6 +23,8 @@ public class UserService {
     UserDao userDao;
     TranslateService translateService;
     NotificationService notificationService;
+    private final static Logger LOGGER = Logger.getLogger(UserService.class.getName());
+
 
     @Autowired
     public UserService(UserDao userDao, TranslateService translateService, NotificationService notificationService) {
@@ -69,7 +71,10 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserDto getCurrentUser() throws UnauthorizedException {
-        if (SecurityUtils.isAuthenticatedAnonymously()) throw new UnauthorizedException();
+        if (SecurityUtils.isAuthenticatedAnonymously()) {
+            LOGGER.info("You are not login " );
+            throw new UnauthorizedException();
+        }
         else return translateService.translateUser(SecurityUtils.getCurrentUser());
     }
 
