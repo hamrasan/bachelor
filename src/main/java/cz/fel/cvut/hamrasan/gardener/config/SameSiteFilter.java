@@ -1,6 +1,5 @@
 package cz.fel.cvut.hamrasan.gardener.config;
 
-import cz.fel.cvut.hamrasan.gardener.service.security.LoginService;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
