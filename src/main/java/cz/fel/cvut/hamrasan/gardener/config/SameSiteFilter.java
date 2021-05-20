@@ -18,8 +18,10 @@ public class SameSiteFilter extends GenericFilterBean {
     public void doFilter (ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletResponse resp = (HttpServletResponse) response;
         LOGGER.info(resp.getHeader("Set-Cookie"));
-        resp.setHeader("Set-Cookie", "SameSite=None; Secure;" + resp.getHeader("Set-Cookie"));
+        resp.setHeader("Set-Cookie", "SameSite=None; Secure");
         chain.doFilter(request, response);
     }
+
+
 
 }
