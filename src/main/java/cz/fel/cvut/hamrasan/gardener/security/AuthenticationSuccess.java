@@ -13,10 +13,13 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Writes basic login/logout information into the response.
@@ -37,10 +40,22 @@ public class AuthenticationSuccess implements AuthenticationSuccessHandler, Logo
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                                         Authentication authentication) throws IOException {
         final String username = getUsername(authentication);
+        final String SESSION_COOKIE_NAME = "JSESSIONID";
+        final String SAME_SITE_ATTRIBUTE_VALUES = "SameSite=None;Secure";
         if (LOG.isTraceEnabled()) {
             LOG.trace("Successfully authenticated user {}", username);
         }
         final LoginStatus loginStatus = new LoginStatus(true, authentication.isAuthenticated(), username, null);
+
+        Cookie[] cookies = httpServletRequest.getCookies();
+        if (cookies != null && cookies.length > 0) {
+            List<Cookie> cookieList = Arrays.asList(cookies);
+            Cookie sessionCookie = cookieList.stream().filter(cookie -> SESSION_COOKIE_NAME.equals(cookie.getName())).findFirst().orElse(null);
+            if (sessionCookie != null) {
+                httpServletResponse.setHeader(HttpHeaders.SET_COOKIE, sessionCookie.getName() + "=" + sessionCookie.getValue() + SAME_SITE_ATTRIBUTE_VALUES);
+            }
+        }
+
         mapper.writeValue(httpServletResponse.getOutputStream(), loginStatus);
     }
 

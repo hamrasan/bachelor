@@ -67,13 +67,4 @@ public class AppConfig {
         return objectMapper;
     }
 
-    @Bean
-    public CookieSerializer cookieSerializer() {
-        DefaultCookieSerializer serializer = new DefaultCookieSerializer();
-        serializer.setCookieName("JSESSIONID");
-        serializer.setCookiePath("/");
-        serializer.setSameSite("None");
-        return serializer;
-    }
-
 }
