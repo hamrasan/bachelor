@@ -68,8 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
                 .and().headers().frameOptions().sameOrigin()
                 .and().authenticationProvider(authenticationProvider)
-                .addFilterAfter(new SameSiteFilter(), BasicAuthenticationFilter.class)
-
+//                .addFilterAfter(new SameSiteFilter(), BasicAuthenticationFilter.class)
 //                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 //                .and()
                 .csrf().disable()
