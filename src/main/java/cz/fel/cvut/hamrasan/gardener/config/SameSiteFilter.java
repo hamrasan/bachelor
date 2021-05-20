@@ -1,48 +1,44 @@
 package cz.fel.cvut.hamrasan.gardener.config;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.web.filter.GenericFilterBean;
+import java.io.IOException;
+import java.util.Collection;
 
 import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.logging.Logger;
 
-public class SameSiteFilter extends GenericFilterBean {
-    private final static Logger LOGGER = Logger.getLogger(SameSiteFilter.class.getName());
+import org.springframework.http.HttpHeaders;
+
+public class SameSiteFilter implements javax.servlet.Filter {
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+
+    }
 
     @Override
-    public void doFilter (ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-//        HttpServletResponse resp = (HttpServletResponse) response;
-//        LOGGER.info(resp.getHeader("Set-Cookie"));
-//        resp.setHeader("Set-Cookie", "SameSite=None; Secure");
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        chain.doFilter(request, response);
+        addSameSiteCookieAttribute((HttpServletResponse) response); // add SameSite=strict cookie attribute
+    }
 
-        HttpServletRequest req = (HttpServletRequest) request;
-        HttpServletResponse res = (HttpServletResponse) response;
-//        LOGGER.info("Same Site Filter Logging Response :{}", res.getContentType());
-
-        Collection<String> headers = res.getHeaders(HttpHeaders.SET_COOKIE);
+    private void addSameSiteCookieAttribute(HttpServletResponse response) {
+        Collection<String> headers = response.getHeaders(HttpHeaders.SET_COOKIE);
         boolean firstHeader = true;
         for (String header : headers) { // there can be multiple Set-Cookie attributes
             if (firstHeader) {
-                res.setHeader(HttpHeaders.SET_COOKIE, String.format("%s; %s",  header, "SameSite=None"));
-                LOGGER.info(String.format("Same Site Filter First Header %s; %s", header, "SameSite=None; Secure"));
-
+                response.setHeader(HttpHeaders.SET_COOKIE, String.format("%s; %s", header, "SameSite=None"));
                 firstHeader = false;
                 continue;
             }
-
-            res.addHeader(HttpHeaders.SET_COOKIE, String.format("%s; %s",  header, "SameSite=None"));
-            LOGGER.info(String.format("Same Site Filter Remaining Headers %s; %s", header, "SameSite=None; Secure"));
+            response.addHeader(HttpHeaders.SET_COOKIE, String.format("%s; %s", header, "SameSite=None"));
         }
-        chain.doFilter(request, response);
     }
 
+    @Override
+    public void destroy() {
 
-
+    }
 }
