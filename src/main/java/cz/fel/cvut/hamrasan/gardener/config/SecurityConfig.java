@@ -77,11 +77,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter(SecurityConstants.USERNAME_PARAM).passwordParameter(SecurityConstants.PASSWORD_PARAM)
                 .and()
 //                .addFilterAfter(new SessionCookieFilter(), BasicAuthenticationFilter.class)
-                .addFilterAfter(new SameSiteFilter(), BasicAuthenticationFilter.class)
+//                .addFilterAfter(new SameSiteFilter(), BasicAuthenticationFilter.class)
                 .addFilter(corsFilter()).logout().invalidateHttpSession(true).deleteCookies(COOKIES_TO_DESTROY)
                 .logoutUrl(SecurityConstants.LOGOUT_URI).logoutSuccessHandler(logoutSuccessHandler)
                 .and().sessionManagement().maximumSessions(1);
-
 
     }
 

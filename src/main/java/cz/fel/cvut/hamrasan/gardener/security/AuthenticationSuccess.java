@@ -7,6 +7,7 @@ import cz.fel.cvut.hamrasan.gardener.security.model.UserDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collection;
 
 /**
  * Writes basic login/logout information into the response.
@@ -40,6 +42,7 @@ public class AuthenticationSuccess implements AuthenticationSuccessHandler, Logo
         }
         final LoginStatus loginStatus = new LoginStatus(true, authentication.isAuthenticated(), username, null);
         mapper.writeValue(httpServletResponse.getOutputStream(), loginStatus);
+        addSameSiteCookieAttribute(httpServletResponse);
     }
 
     private String getUsername(Authentication authentication) {
@@ -58,5 +61,19 @@ public class AuthenticationSuccess implements AuthenticationSuccessHandler, Logo
         final LoginStatus loginStatus = new LoginStatus(false, true, null, null);
         mapper.writeValue(httpServletResponse.getOutputStream(), loginStatus);
     }
+
+    private void addSameSiteCookieAttribute(HttpServletResponse response) {
+        Collection<String> headers = response.getHeaders(HttpHeaders.SET_COOKIE);
+        boolean firstHeader = true;
+        for (String header : headers) { // there can be multiple Set-Cookie attributes
+            if (firstHeader) {
+                response.setHeader(HttpHeaders.SET_COOKIE, String.format("%s; %s", header, "SameSite=None; Secure"));
+                firstHeader = false;
+                continue;
+            }
+            response.addHeader(HttpHeaders.SET_COOKIE, String.format("%s; %s", header, "SameSite=None; Secure"));
+        }
+    }
+
 }
 
